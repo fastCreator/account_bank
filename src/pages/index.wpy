@@ -1,0 +1,83 @@
+<style lang="less">
+.page-index{
+  .add-icon{
+    position: fixed;
+    bottom: 80rpx;
+    right:80rpx;
+    width:100rpx;
+    height:100rpx;
+    line-height: 84rpx;
+    text-align: center;
+    font-size: 90rpx;
+    color: #ffffff;
+    background-color: #67ABF6;
+    box-shadow: 0 0 15px 3px rgba(0,0,0,0.2);
+    border-radius: 1000px;
+  }
+}
+
+</style>
+<template>
+  <view class="page-index">
+    <view class="text">{{text}}</view>
+    <c-list :list.sync="list"></c-list>
+    <c-add :isshow.sync="show" :value.sync="value" @setData="setData"></c-add>
+    <view class="add-icon" @tap="additem">+</view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import list from '@/components/wepy-list'
+import add from '@/components/wepy-add'
+const db = wx.cloud.database()
+export default class Index extends wepy.page {
+  config = {
+    navigationBarTitleText: '账号本'
+  };
+  components = {
+    'c-list': list,
+    'c-add': add
+  };
+
+  mixins = [];
+
+  data = {
+    list: [],
+    show: false,
+    value: {
+      title: '',
+      user: '',
+      pwd: ''
+    }
+  };
+
+  computed = {};
+
+  methods = {
+    additem() {
+      this.show = true
+      this.value = {
+        title: '',
+        user: '',
+        pwd: ''
+      }
+    }
+  };
+  async getList() {
+    let res = await db.collection('accounts').get()
+    this.list = res.data
+    this.$apply()
+  }
+  events = {
+    'edit': (v, $event) => {
+      this.value = v
+      this.show = true
+    }
+  };
+
+  onLoad() {
+    this.getList()
+  }
+}
+</script>

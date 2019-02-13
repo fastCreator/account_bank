@@ -1,0 +1,71 @@
+<style lang="less">
+.c-list {
+  .list-item {
+    background-color: #438ddf;
+    border-bottom: 1px solid #3c7fc9;
+    padding: 20rpx;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    .title {
+      margin-left: 20rpx;
+      vertical-align: text-bottom;
+      flex-grow: 1;
+    }
+    .user {
+      float: right;
+      font-size: 30rpx;
+      line-clamp: 100%;
+    }
+  }
+}
+</style>
+<template>
+  <view class="c-list">
+    <block wx:for="{{list}}" wx:key="index">
+      <view class="list-item" @tap="edit" data-index="{{index}}">
+        <icon class="iconfont icon-fuzhi" @tap.stop="copyText" data-index="{{index}}"></icon>
+        <text class="title">{{item.title}}</text>
+        <text class="user">{{item.user}}</text>
+      </view>
+    </block>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class List extends wepy.component {
+  props = {
+    title: String,
+    list: Array
+  };
+
+  data = {};
+
+  events = {};
+
+  methods = {
+    copyText(e) {
+      let index = e.currentTarget.dataset.index
+      let item = this.list[index]
+      let str = `${item.user}\n${item.pwd}`
+      wx.setClipboardData({
+        data: str,
+        success(res) {
+          console.log(res.data) // data
+        }
+      })
+    },
+    edit(e) {
+      let index = e.currentTarget.dataset.index
+      let item = this.list[index]
+      this.$emit('edit', item)
+    }
+  };
+  onLoad() {
+    console.log(this.list)
+    setTimeout(() => {
+      console.log(this.list)
+    }, 1000)
+  }
+}
+</script>

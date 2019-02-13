@@ -1,0 +1,16 @@
+{
+	"description": "账号保险库",
+	"setting": {
+		"urlCheck": true,
+		"es6": false,
+		"postcss": false,
+		"minified": false,
+		"newFeature": true
+	},
+	"compileType": "miniprogram",
+	"appid": "wx6883d65f70fecd8a",
+	"projectname": "account_bank",
+	"miniprogramRoot": "dist/",
+	"libVersion": "2.5.2",
+	"condition": {}
+}

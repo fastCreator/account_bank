@@ -1,0 +1,90 @@
+<style lang="less">
+@import "./public/font.wxss";
+.iconfont {
+  font-size: 50rpx;
+}
+page{
+  background-color: #F3F3F3;
+}
+</style>
+
+<script>
+import wepy from 'wepy'
+import 'wepy-async-function'
+wx.cloud.init({
+  env: 'dev-86a81e'
+})
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/index',
+      'pages/safe'
+    ],
+    'tabBar': {
+      'color': '#B3B3B3',
+      'selectedColor': '#438DDF',
+      'backgroundColor': '#FEFEFE',
+      'borderStyle': 'white',
+      'list': [
+        {
+          'pagePath': 'pages/index',
+          'text': '本本',
+          'iconPath': 'public/list.png',
+          'selectedIconPath': 'public/list-select.png'
+        },
+        {
+          'pagePath': 'pages/safe',
+          'text': '须知',
+          'iconPath': 'public/safe.png',
+          'selectedIconPath': 'public/safe-select.png'
+        }
+      ]
+    },
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: 'WeChat',
+      navigationBarTextStyle: 'black'
+    }
+  }
+
+  globalData = {
+    userInfo: null
+  }
+
+  constructor () {
+    super()
+    this.use('requestfix')
+  }
+
+  onLaunch() {
+    this.testAsync()
+  }
+
+  sleep (s) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('promise resolved')
+      }, s * 1000)
+    })
+  }
+
+  async testAsync () {
+    const data = await this.sleep(3)
+    console.log(data)
+  }
+
+  getUserInfo(cb) {
+    const that = this
+    if (this.globalData.userInfo) {
+      return this.globalData.userInfo
+    }
+    wepy.getUserInfo({
+      success (res) {
+        that.globalData.userInfo = res.userInfo
+        cb && cb(res.userInfo)
+      }
+    })
+  }
+}
+</script>

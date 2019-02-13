@@ -1,0 +1,178 @@
+<style lang="less">
+.c-add {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  .wrap {
+    width: 80%;
+    background-color: #fff;
+    border-radius: 10rpx;
+    margin: auto;
+    margin-top: 32%;
+    overflow: hidden;
+    .title {
+      background-color: #438ddf;
+      color: #fff;
+      .title-placeholder {
+        color: #fff;
+      }
+    }
+    .item {
+      padding: 26rpx;
+    }
+    .label {
+      font-size: 20rpx;
+      color: #8b8b8b;
+      margin-bottom: 5rpx;
+    }
+    .btns {
+      display: flex;
+      padding: 26rpx;
+      justify-content: space-around;
+      view {
+        border-radius: 1000px;
+        border-width: 1px;
+        border-style: solid;
+        flex-grow: 1;
+        text-align: center;
+        padding: 8rpx 0;
+        font-size: 30rpx;
+      }
+      .remove {
+        border-color: #fa466c;
+        color: #fa466c;
+        margin-right: 26rpx;
+      }
+      .save {
+        border-color: #438ddf;
+        color: #438ddf;
+      }
+    }
+  }
+}
+</style>
+<template>
+  <block wx:if="{{isshow}}">
+    <view
+      class="c-add"
+      @tap="hide"
+    >
+      <view class="wrap">
+        <view class="title item">
+          <input
+            placeholder-class="title-placeholder"
+            placeholder="请输入名称"
+            value="{{value.title}}"
+            @input="input('value.title')"
+          />
+        </view>
+        <view class="user item">
+          <view class="label">账号</view>
+          <input
+            placeholder="请输入账号"
+            value="{{value.user}}"
+            @input="input('value.user')"
+          />
+        </view>
+        <view class="pwd item">
+          <view class="label">密码</view>
+          <input
+            placeholder="请输入密码"
+            value="{{value.pwd}}"
+            @input="input('value.pwd')"
+          />
+        </view>
+        <view class="btns">
+          <view
+            class="remove"
+            wx:if="{{value._id}}"
+            @tap="remove"
+          >删除</view>
+          <view
+            class="save"
+            @tap="save"
+          >保存</view>
+        </view>
+      </view>
+    </view>
+  </block>
+</template>
+<script>
+import wepy from 'wepy'
+const db = wx.cloud.database()
+export default class Add extends wepy.component {
+  components = {};
+  props = {
+    isshow: {
+      type: Boolean,
+      default: false,
+      twoWay: true
+    },
+    value: {
+      type: Object,
+      default: true
+    }
+  };
+  data = {};
+
+  events = {};
+
+  watch = {};
+  computed = {};
+  methods = {
+    input(a, e) {
+      let arr = a.split('.')
+      let v = this
+      for (let i = 0; i < arr.length - 1; i++) {
+        v = v[arr[i]]
+      }
+      v[arr[arr.length - 1]] = e.detail.value
+    },
+    async save() {
+      let v = Object.assign(Object.assign({}, this.value), {
+        _id: undefined,
+        _openid: undefined
+      })
+      if (this.value._id) {
+        await db
+          .collection('accounts')
+          .doc(this.value._id)
+          .update({
+            data: v
+          })
+      } else {
+        await db.collection('accounts').add({
+          data: v
+        })
+      }
+      this.closeUpdate()
+    },
+    async remove() {
+      await db.collection('accounts')
+        .doc(this.value._id)
+        .remove()
+      this.closeUpdate()
+    },
+    hide(e) {
+      if (
+        e.currentTarget.offsetTop === e.target.offsetTop &&
+        e.currentTarget.offsetLeft === e.target.offsetLeft
+      ) {
+        this.isshow = false
+      }
+    }
+  };
+  closeUpdate() {
+    this.isshow = false
+    this.$parent.getList()
+    this.$apply()
+  }
+  onLoad() {
+    console.log(this)
+  }
+}
+</script>

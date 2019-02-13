@@ -1,0 +1,118 @@
+<style lang="less">
+.page-safe {
+  .icon-header {
+    text-align: center;
+    image {
+      margin-top: 10rpx;
+      width: 300rpx;
+      height: 300rpx;
+    }
+    .label {
+      font-size: 36rpx;
+    }
+  }
+  .list {
+    margin-top: 40rpx;
+    padding: 0 60rpx;
+    .title {
+      font-size: 36rpx;
+      font-weight: bold;
+      margin-bottom: 10rpx;
+    }
+    .descript {
+      color: #b9b9b9;
+    }
+    .content {
+      font-size: 34rpx;
+    }
+    text.green {
+      color: #3fb837;
+    }
+    text.red {
+      color: #ff3b30;
+    }
+    text.blue {
+      color: #1677d2;
+    }
+    text.yellow {
+      color: #fcad00;
+    }
+    .li {
+      margin-top:10rpx;
+      .demo {
+        margin-left: 106rpx;
+      }
+    }
+  }
+  .share {
+    text-align: center;
+    margin-top: 40rpx;
+  }
+}
+</style>
+<template>
+  <view class="page-safe">
+    <view class="icon-header">
+      <image src="../public/qrcode.png">
+        <view class="label">账号本</view>
+    </view>
+    <view class="list">
+      <view class="title">云数据存储</view>
+      <view class="content">
+        微信账号登录，即可方便查阅该账号下的所有数据
+      </view>
+    </view>
+    <view class="list">
+      <view class="title">数据安全</view>
+      <view class="content">
+        该小程序使用云开发模式，存储及计算服务由腾讯云TCB提供
+      </view>
+    </view>
+    <view class="list">
+      <view class="title">更安全的密码存储方案</view>
+      <view class="content">
+        <view class="descript">为了防止手机被身边人查阅，可将密码转换后存储，更为安全可靠，以下提供简单可靠举例方案</view>
+        <view class="li">
+          <view><text class="blue">移位法</text>:将密码任意两位对换位置</view>
+          <view class="demo">真(<text class="green">1</text><text class="yellow">2</text>34)->存(<text class="yellow">2</text><text class="green">1</text>34)</view>
+        </view>
+        <view class="li">
+          <view><text class="blue">数加法</text>:将密码第任一位数字加一个数</view>
+          <view class="demo">真(11<text class="yellow">1</text>1)->存(11<text class="green">2</text>1)</view>
+        </view>
+      </view>
+    </view>
+    <view class="share"><button
+        open-type="share"
+        size="mini"
+      >推荐给朋友</button></view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class Index extends wepy.page {
+  config = {
+    navigationBarTitleText: '用户须知'
+  };
+  components = {};
+
+  mixins = [];
+
+  data = {};
+
+  computed = {};
+
+  methods = {};
+  events = {};
+
+  onLoad() {}
+  onShareAppMessage() {
+    return {
+      title: '账号本',
+      desc: '一款安全的账号记录本',
+      path: '/pages/index'
+    }
+  }
+}
+</script>
